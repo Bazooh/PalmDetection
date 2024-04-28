@@ -12,7 +12,7 @@ def train(input_shape, network, pairs, labels, epochs=10):
     processed_a = network(input_a)
     processed_b = network(input_b)
 
-    # Example distance layer (L1 distance)
+    # Example distance layer (L2 distance)
     distance = layers.Lambda(lambda embeddings: tf.square(embeddings[0] - embeddings[1]))([processed_a, processed_b])
 
     # Add a dense layer with a sigmoid unit to generate the similarity score

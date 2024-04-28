@@ -19,6 +19,7 @@ def get_data(img_size=(100, 100)):
     data = []
     train_indices = []
     test_indices = []
+    val_indices = []
     database_path = 'Database'
     
     for folder in tqdm(os.listdir(database_path)):
@@ -31,15 +32,17 @@ def get_data(img_size=(100, 100)):
         images = [cv2.resize(cv2.imread(image_file), img_size) for image_file in image_files]
         
         idxs = [i + len(data) for i in range(len(image_files))]
-        train_idxs = random.sample(idxs, int(len(image_files) * 0.8))
-        test_idxs = list(set(idxs) - set(train_idxs))
+        train_idxs = random.sample(idxs, int(len(image_files) * 0.7))
+        test_idxs = random.sample(list(set(idxs) - set(train_idxs)), int(len(image_files) * 0.2))
+        val_idxs = list(set(idxs) - set(train_idxs) - set(test_idxs))
 
         train_indices.append(train_idxs)
         test_indices.append(test_idxs)
+        val_indices.append(val_idxs)
         
         data.extend(images)
     
-    return data, train_indices, test_indices
+    return data, train_indices, test_indices, val_indices
 
 
 # Create pairs for training
