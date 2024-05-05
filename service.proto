@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+service ImageProcessingService {
+  rpc GetImageData (BytesImage) returns (ImageData) {}
+  rpc GetImageOwner (ImageAndDataset) returns (ImageOwner) {}
+}
+
+message ImageAndDataset {
+  ImageData image = 1;
+  Dataset dataset = 2;
+}
+
+message BytesImage {
+  repeated uint32 bytes = 1;
+  int32 height = 2;
+  int32 width = 3;
+}
+
+message ImageData {
+  repeated float data = 1;
+}
+
+message Dataset {
+  repeated ImageData images = 1;
+  repeated string owners = 2;
+}
+
+message ImageOwner {
+  bool is_in_database = 1;
+  string owner = 2;
+}
