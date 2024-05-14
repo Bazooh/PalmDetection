@@ -44,7 +44,6 @@ lambda_regularizer = 0.0
 simple_model = tf.keras.Sequential([
     Resizing(100, 100, interpolation='bilinear'),
     
-    
     Conv2D(32, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
@@ -62,10 +61,10 @@ simple_model = tf.keras.Sequential([
     
     Flatten(),
     
-    # Dropout(0.2),
-    
-    Dense(128, activation='relu'),
-    Dense(32, activation='relu'),
+    Dropout(0.2),
+    Dense(128, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Dropout(0.2),
+    Dense(32, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
 ])
 
 
