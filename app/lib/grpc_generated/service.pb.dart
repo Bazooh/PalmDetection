@@ -253,6 +253,7 @@ class ImageOwner extends $pb.GeneratedMessage {
   factory ImageOwner({
     $core.bool? isInDatabase,
     $core.String? owner,
+    $core.double? probability,
   }) {
     final $result = create();
     if (isInDatabase != null) {
@@ -260,6 +261,9 @@ class ImageOwner extends $pb.GeneratedMessage {
     }
     if (owner != null) {
       $result.owner = owner;
+    }
+    if (probability != null) {
+      $result.probability = probability;
     }
     return $result;
   }
@@ -270,6 +274,7 @@ class ImageOwner extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageOwner', createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'isInDatabase')
     ..aOS(2, _omitFieldNames ? '' : 'owner')
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'probability', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -311,6 +316,15 @@ class ImageOwner extends $pb.GeneratedMessage {
   $core.bool hasOwner() => $_has(1);
   @$pb.TagNumber(2)
   void clearOwner() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get probability => $_getN(2);
+  @$pb.TagNumber(3)
+  set probability($core.double v) { $_setFloat(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasProbability() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearProbability() => clearField(3);
 }
 
 

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -59,7 +60,6 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   late CameraController _controller;
   bool _isCameraReady = false;
-  bool isImageValid = false;
   HashMap<String, (img.Image, ImageData)> registeredHands = HashMap();
   int pageIndex = 0;
 
@@ -107,7 +107,9 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     final XFile file = await _controller.takePicture();
     final img.Image? image = img.decodeImage(await file.readAsBytes());
 
-    return image;
+    if (image == null) return null;
+
+    return img.copyRotate(image, 90);
   }
 
   Future<ImageData> _getImageData(img.Image image) async {
@@ -116,10 +118,10 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         .then((p0) => ImageData(data: p0.data));
   }
 
-  Future<String?> _getImageOwner(ImageData imageData) async {
+  Future<ImageOwner> _getImageOwner(ImageData imageData) async {
     List<String> owners = registeredHands.keys.toList();
 
-    ImageOwner imageOwner = await ImageProcessingServiceClient(getClientChannel())
+    return await ImageProcessingServiceClient(getClientChannel())
         .getImageOwner(ImageAndDataset(
           image: imageData,
           dataset: Dataset(
@@ -127,10 +129,6 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             images: owners.map((owner) => registeredHands[owner]!.$2)
           )
         ));
-    
-    if (!imageOwner.isInDatabase) return null;
-    
-    return imageOwner.owner;
   }
 
   void _addHand() async {
@@ -193,10 +191,42 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           if (pageIndex == 0) {
             _addHand();
           } else if (pageIndex == 1) {
-            _takePicture().then((value) => {
-              if (value != null) setState(() {
-                // TODO: Implement image validation
-              })
+            _takePicture().then((image) => {
+              if (image != null) {
+                _getImageData(image).then((imageData) => {
+                  _getImageOwner(imageData).then((imageOwner) => {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            imageOwner.isInDatabase ? imageOwner.owner : 'Unknown',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: imageOwner.isInDatabase ? null : Colors.red,
+                            ),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.memory(Uint8List.fromList(img.encodePng(image))),
+                              if (imageOwner.isInDatabase)
+                                const SizedBox(height: 20,),
+                              if (imageOwner.isInDatabase)
+                                Text(
+                                  'Probability: ${(100 * imageOwner.probability).toStringAsFixed(1)} %',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  })
+                })
+              }
             });
           }
         },
@@ -223,7 +253,7 @@ class AddHandPage extends StatefulWidget {
 class AddHandPageState extends State<AddHandPage> with WidgetsBindingObserver {
 
   Future<String?> _getOwner() async {
-    String? owner;
+    String owner = '';
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -239,7 +269,7 @@ class AddHandPageState extends State<AddHandPage> with WidgetsBindingObserver {
             ),
             TextButton(
               onPressed: () {
-                if (owner != null && owner!.isNotEmpty) {
+                if (owner.isNotEmpty) {
                   Navigator.of(context).pop(owner);
                 }
               },
@@ -308,6 +338,18 @@ class RegisteredHandsPage extends StatelessWidget {
           String owner = handOwners[index];
           return ListTile(
             title: Text(owner),
+            onTap: () {
+              img.Image image = registeredHands[owner]!.$1;
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(owner),
+                    content: Image.memory(Uint8List.fromList(img.encodePng(image))),
+                  );
+                },
+              );
+            },
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () => removeHand(owner),

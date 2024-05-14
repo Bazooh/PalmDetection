@@ -4,12 +4,14 @@ import random
 import cv2
 import numpy as np
 from tqdm import tqdm
+from preprocessing import preprocess_image
+from typing import Literal
 
 
 random.seed(42)
 
 
-def get_data(img_size=(100, 100)):
+def get_data(img_size=(100, 100), preprocessing: Literal[None, 'only', 'both'] = None):
     '''
     Returns a list of images and indices for training and testing
         - data: np.array of shape (n, img_size[0], img_size[1], 3) => [img1, img2, ...]
@@ -39,6 +41,12 @@ def get_data(img_size=(100, 100)):
         train_indices.append(train_idxs)
         test_indices.append(test_idxs)
         val_indices.append(val_idxs)
+        
+        if (preprocessing == 'only'):
+            images = [preprocess_image(image) for image in images]
+        
+        if (preprocessing == 'both'):
+            images = [np.concatenate([image, preprocess_image(image)], axis=-1) for image in images]
         
         data.extend(images)
     

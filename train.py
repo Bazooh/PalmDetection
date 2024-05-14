@@ -2,12 +2,11 @@ from model import dual_model
 from tensorflow.keras import optimizers
 
 
-def train(input_shape, network, pairs, labels, epochs=10):
+def train(input_shape, network, pairs, labels, validation_data=None, epochs=10):
     model = dual_model(input_shape, network)
 
-    # Compile the model
-    model.compile(loss='binary_crossentropy', optimizer=optimizers.Adam(), metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer=optimizers.Adam(), metrics=['binary_accuracy'])
     
-    model.fit([pairs[:, 0], pairs[:, 1]], labels, batch_size=128, epochs=epochs)
+    model.fit([pairs[:, 0], pairs[:, 1]], labels, batch_size=128, epochs=epochs, validation_data=validation_data)
     
     return model

@@ -1,7 +1,23 @@
 import tensorflow as tf
-from tensorflow.keras import layers, models
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Resizing
+from tensorflow.keras import layers, models, regularizers
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Resizing, Dropout
 
+
+class PredictionLayer(tf.keras.Model):
+    def __init__(self, loss_function):
+        super(PredictionLayer, self).__init__()
+        self.loss_function = loss_function
+    
+    def build(self, input_shape):
+        self.alpha = self.add_weight(name='alpha', shape=(), initializer=tf.constant_initializer(1.0), trainable=True)
+
+    def call(self, inputs):
+        loss = self.loss_function(inputs[0], inputs[1])
+        prediction = tf.math.exp(-self.alpha * loss)
+        return prediction
+
+
+prediction_layer = PredictionLayer(loss_function=tf.losses.mean_squared_error)
 
 def dual_model(input_shape, network):
     # Create the left and right inputs for the pairs
@@ -12,12 +28,10 @@ def dual_model(input_shape, network):
     # the weights of the network will be shared across the two branches
     processed_a = network(input_a)
     processed_b = network(input_b)
-
-    # Example distance layer (L2 distance)
-    distance = layers.Lambda(lambda embeddings: tf.square(embeddings[0] - embeddings[1]))([processed_a, processed_b])
-
-    # Add a dense layer with a sigmoid unit to generate the similarity score
-    prediction = layers.Dense(1, activation='sigmoid')(distance)
+    
+    # The prediction is the exponential of the negative error (L2 distance between the processed images)
+    # Equals 1 if the distance is 0 (same image), 0 if the distance is infinite (different images)
+    prediction = prediction_layer([processed_a, processed_b])
 
     # Connect the inputs with the outputs
     model = models.Model(inputs=[input_a, input_b], outputs=prediction)
@@ -25,27 +39,33 @@ def dual_model(input_shape, network):
     return model
 
 
+lambda_regularizer = 0.0
+
 simple_model = tf.keras.Sequential([
     Resizing(100, 100, interpolation='bilinear'),
     
-    Conv2D(32, (3, 3), activation='relu'),
+    
+    Conv2D(32, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(64, (3, 3), activation='relu'),
+    Conv2D(64, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(128, (3, 3), activation='relu'),
+    Conv2D(128, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(256, (3, 3), activation='relu'),
+    Conv2D(256, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(512, (3, 3), activation='relu'),
+    Conv2D(512, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
     Flatten(),
-    Dense(512, activation='relu'),
-    Dense(512, activation='relu'),
+    
+    # Dropout(0.2),
+    
+    Dense(128, activation='relu'),
+    Dense(32, activation='relu'),
 ])
 
 
@@ -86,7 +106,7 @@ small_cnn_model = tf.keras.Sequential([
     MaxPooling2D((2, 2)),
     
     Flatten(),
-    Dense(128, activation='relu'),
-    Dense(512, activation='relu'),
+    Dense(64, activation='relu'),
+    Dense(16, activation='relu'),
     # Dense(4, activation='relu'),
 ])

@@ -74,11 +74,12 @@ const ImageOwner$json = {
   '2': [
     {'1': 'is_in_database', '3': 1, '4': 1, '5': 8, '10': 'isInDatabase'},
     {'1': 'owner', '3': 2, '4': 1, '5': 9, '10': 'owner'},
+    {'1': 'probability', '3': 3, '4': 1, '5': 2, '10': 'probability'},
   ],
 };
 
 /// Descriptor for `ImageOwner`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageOwnerDescriptor = $convert.base64Decode(
     'CgpJbWFnZU93bmVyEiQKDmlzX2luX2RhdGFiYXNlGAEgASgIUgxpc0luRGF0YWJhc2USFAoFb3'
-    'duZXIYAiABKAlSBW93bmVy');
+    'duZXIYAiABKAlSBW93bmVyEiAKC3Byb2JhYmlsaXR5GAMgASgCUgtwcm9iYWJpbGl0eQ==');
 

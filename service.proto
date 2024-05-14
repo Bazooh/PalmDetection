@@ -1,10 +1,5 @@
 syntax = "proto3";
 
-service ImageProcessingService {
-  rpc GetImageData (BytesImage) returns (ImageData) {}
-  rpc GetImageOwner (ImageAndDataset) returns (ImageOwner) {}
-}
-
 message ImageAndDataset {
   ImageData image = 1;
   Dataset dataset = 2;
@@ -28,4 +23,10 @@ message Dataset {
 message ImageOwner {
   bool is_in_database = 1;
   string owner = 2;
+  float probability = 3;
+}
+
+service ImageProcessingService {
+  rpc GetImageData (BytesImage) returns (ImageData) {}
+  rpc GetImageOwner (ImageAndDataset) returns (ImageOwner) {}
 }
