@@ -3,43 +3,181 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:app/grpc_generated/client.dart';
 import 'package:app/grpc_generated/init_py.dart';
 import 'package:app/grpc_generated/service.pbgrpc.dart';
+import 'package:grpc/service_api.dart';
 import 'package:image/image.dart' as img;
-
-Future<void> pyInitResult = Future(() => null);
+import './connection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  pyInitResult = initPy(true);
   final cameras = await availableCameras();
 
-  // Check if there are any cameras available
-  // if (cameras.isEmpty) return;
-
-  runApp(MyApp(
+  runApp(AppWithConnection(
     camera: cameras.first,
   ));
 }
 
-class MyApp extends StatelessWidget {
+
+final ThemeData themeData = ThemeData(
+  colorScheme: ColorScheme.fromSwatch(
+    // primarySwatch: const Colors(0xFFFFFDD0),
+    accentColor: const Color.fromARGB(255, 141, 141, 141), // Muted teal
+    backgroundColor: const Color(0xFFF5F5F5), // Light grey
+    cardColor: const Color(0xFFFFFFFF), // White for card backgrounds
+  ).copyWith(
+    secondary: const Color.fromARGB(255, 60, 60, 60), // Secondary color for accent
+  ),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 223, 223, 223),
+  
+  appBarTheme: const AppBarTheme(
+    color: Color.fromARGB(255, 31, 31, 31),
+    iconTheme: IconThemeData(color: Colors.white),
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+
+  textTheme: const TextTheme(
+    headline1: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+    headline2: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600, color: Color(0xFF333333)),
+    headline3: TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal, color: Color(0xFF333333)),
+    headline4: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: Color(0xFF333333)),
+    headline5: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal, color: Color(0xFF333333)),
+    headline6: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal, color: Color(0xFF333333)),
+    bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Color(0xFF666666)),
+    bodyText2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: Color(0xFF666666)),
+    button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+    caption: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: Color(0xFF888888)), // Additional text style
+    subtitle1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500, color: Color(0xFF444444)), // Additional text style
+    subtitle2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: Color(0xFF666666)), // Additional text style
+  ),
+
+  buttonTheme: const ButtonThemeData(
+    buttonColor: Color(0xFF132137),
+    textTheme: ButtonTextTheme.primary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+  ),
+
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: Color.fromARGB(255, 232, 232, 232),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 19, 15, 57)),
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 131, 131, 131)),
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+    labelStyle: TextStyle(color: Color.fromARGB(255, 92, 92, 92)), // Label style for inputs
+    hintStyle: TextStyle(color: Color(0xFFBBBBBB)), // Hint style for inputs
+  ),
+
+  iconTheme: const IconThemeData(
+    color: Color.fromARGB(255, 12, 255, 69),
+  ),
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: const Color.fromARGB(255, 226, 226, 226),
+      backgroundColor: const Color.fromARGB(255, 45, 45, 45),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      textStyle: const TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Color.fromARGB(255, 45, 45, 45),
+    foregroundColor: Color.fromARGB(255, 226, 226, 226),
+  ),
+  
+  dialogBackgroundColor: const Color.fromARGB(255, 231, 231, 231),
+
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    selectedItemColor: Color.fromARGB(255, 255, 255, 255),
+    unselectedItemColor: Color.fromARGB(255, 131, 131, 131),
+    backgroundColor: Color.fromARGB(255, 33, 33, 33),
+    elevation: 8,
+  ),
+
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: const Color.fromARGB(255, 45, 45, 45),
+    ),
+  ),
+);
+
+
+final Widget background = Stack(children: [
+  Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [Color.fromARGB(255, 231, 231, 231), Color.fromARGB(255, 147, 147, 147)], // Change colors as per your preference
+      ),
+    ),
+  ),
+  Positioned.fill(
+    child: Opacity(
+      opacity: 0.2, // Adjust the opacity as needed
+      child: Image.asset(
+        'assets/palmprint.png', // Assuming palmprint.png is in the assets folder
+        fit: BoxFit.cover,
+      ),
+    ),
+  ),
+]);
+
+class AppWithConnection extends StatelessWidget {
   final CameraDescription? camera;
 
-  const MyApp({super.key, required this.camera});
+  const AppWithConnection({super.key, required this.camera});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Palm Detection',
+      theme: themeData,
+      home: ConnectionPage(
+        onConnected: (context, clientChannel) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => MyApp(camera: camera, clientChannel: clientChannel),
+          ));
+        },
+      ),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  final CameraDescription? camera;
+  final ClientChannel clientChannel;
+
+  const MyApp({super.key, required this.camera, required this.clientChannel});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blue,
-        ),
-      ),
+      theme: themeData,
       home: MyHomePage(
         title: 'Hand Recognition',
         camera: camera,
+        clientChannel: clientChannel,
       ),
     );
   }
@@ -49,8 +187,9 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   final String title;
   final CameraDescription? camera;
+  final ClientChannel clientChannel;
 
-  const MyHomePage({super.key, required this.title, required this.camera});
+  const MyHomePage({super.key, required this.title, required this.camera, required this.clientChannel});
 
   @override
   MyHomePageState createState() => MyHomePageState();
@@ -60,8 +199,10 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   late CameraController _controller;
   bool _isCameraReady = false;
-  HashMap<String, (img.Image, ImageData)> registeredHands = HashMap();
+  HashMap<String, img.Image> registeredHands = HashMap();
+  List<String> handOwners = [];
   int pageIndex = 0;
+  String? selelectedOwner;
 
   @override
   Future<AppExitResponse> didRequestAppExit() {
@@ -73,6 +214,10 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _getHandOwners().then((value) => setState(() {
+      handOwners = value;
+      print(handOwners);
+    }));
     _initCamera();
   }
 
@@ -112,26 +257,33 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return img.copyRotate(image, 90);
   }
 
-  Future<ImageData> _getImageData(img.Image image) async {
-    return ImageProcessingServiceClient(getClientChannel())
-        .getImageData(BytesImage(bytes: image.data, height: image.height, width: image.width))
-        .then((p0) => ImageData(data: p0.data));
+  Future<ImageOwner> _getImageOwner(BytesImage image) async {
+    return await ImageProcessingServiceClient(widget.clientChannel)
+        .getImageOwner(image);
   }
 
-  Future<ImageOwner> _getImageOwner(ImageData imageData) async {
-    List<String> owners = registeredHands.keys.toList();
-
-    return await ImageProcessingServiceClient(getClientChannel())
-        .getImageOwner(ImageAndDataset(
-          image: imageData,
-          dataset: Dataset(
-            owners: owners,
-            images: owners.map((owner) => registeredHands[owner]!.$2)
-          )
+  Future<Confidence> _isImageOwnedByOwner(BytesImage image, String owner) async {
+    return await ImageProcessingServiceClient(widget.clientChannel)
+        .isImageOwnedByOwner(ImageAndOwner(
+          image: image,
+          owner: owner,
         ));
   }
 
-  void _addHand() async {
+  Future<void> _addImageToDataset(BytesImage image, String owner) async {
+    await ImageProcessingServiceClient(widget.clientChannel)
+        .addImageToDatabase(ImageAndOwner(
+          image: image,
+          owner: owner,
+        ));
+  }
+
+  Future<List<String>> _getHandOwners() async {
+    return await ImageProcessingServiceClient(widget.clientChannel)
+        .getHandOwners(Empty()).then((handOwners) => handOwners.names);
+  }
+
+  Future<void> _addHand() async {
     final (String, img.Image)? newHand = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddHandPage(controller: _controller, takePicture: _takePicture)),
@@ -141,16 +293,121 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
     String owner = newHand.$1;
     img.Image imageBytes = newHand.$2;
-    ImageData imageData = await _getImageData(imageBytes);
+
+    await _addImageToDataset(_toBytesImage(imageBytes), owner);
+    handOwners = await _getHandOwners();
 
     setState(() {
-      registeredHands[owner] = (imageBytes, imageData);
+      registeredHands[owner] = imageBytes;
     });
   }
 
   void _removeHand(String owner) {
     setState(() {
       registeredHands.remove(owner);
+    });
+  }
+
+  BytesImage _toBytesImage(img.Image image) {
+    return BytesImage(bytes: image.data, width: image.width, height: image.height);
+  }
+
+  Future<ImageOwner> processImageGetOwner(img.Image image) async {
+    ImageOwner imageOwner = await _getImageOwner(_toBytesImage(image));
+
+    return imageOwner;
+  }
+
+  Future<ImageOwner> processImageTestOwner(img.Image image, String owner) async {
+    if (owner.isEmpty) {
+      return ImageOwner(
+        owner: '',
+        confidence: Confidence(result: false, probability: 0),
+      );
+    }
+
+    Confidence confidence = await _isImageOwnedByOwner(_toBytesImage(image), owner);
+    
+    return ImageOwner(
+      owner: owner,
+      confidence: confidence,
+    );
+  }
+
+  Future<void> processImage(img.Image? image) async {
+    if (image == null) return;
+
+    void Function(void Function()) setDialogState = (_) {};
+    Text dialogTitle = const Text(
+      "Processing Image...",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 30,
+      ),
+    );
+    Widget dialogDescription = const LinearProgressIndicator();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            setDialogState = setState;
+
+            return AlertDialog(
+              title: dialogTitle,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.memory(Uint8List.fromList(img.encodePng(image))),
+                  const SizedBox(height: 20),
+                  dialogDescription,
+                  const SizedBox(height: 5),
+                ],
+              )
+            );
+          }
+        );
+      },
+    );
+
+    ImageOwner imageOwner;
+    if (pageIndex == 1) {
+      imageOwner = await processImageGetOwner(image);
+    }
+    else if (pageIndex == 2) {
+      if (handOwners.isEmpty || selelectedOwner == null) {
+        return;
+      }
+
+      imageOwner = await processImageTestOwner(image, selelectedOwner!);
+    }
+    else {
+      return;
+    }
+
+    setDialogState(() {
+      dialogTitle = Text(
+        imageOwner.confidence.result ? imageOwner.owner : pageIndex == 1 ? 'Unknown' : 'Not $selelectedOwner',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 30,
+          color: imageOwner.confidence.result ? null : Colors.red,
+        ),
+      );
+      dialogDescription = Text(
+        'Probability: ${
+          imageOwner.confidence.result
+            ? (100 * imageOwner.confidence.probability).toStringAsFixed(1)
+            : (100 * (1 - imageOwner.confidence.probability)).toStringAsFixed(1)
+        } %',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+          color: imageOwner.confidence.result ? null : Colors.red,
+        ),
+      );
     });
   }
 
@@ -167,7 +424,29 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           handOwners: registeredHands.keys.toList()..sort(),
           removeHand: _removeHand,
         )
-        : CameraBackground(controller: _controller),
+        : pageIndex == 1
+        ? CameraBackground(controller: _controller)
+        : Stack(
+          children: [
+            CameraBackground(controller: _controller),
+            DropdownButton<String>(
+              value: selelectedOwner,
+              items: handOwners.map((owner) {
+                return DropdownMenuItem<String>(
+                  value: owner,
+                  alignment: Alignment.center,
+                  child: Text(owner),
+                );
+              }).toList()..sort((a, b) => (a.value ?? '').compareTo(b.value ?? '')),
+              onChanged: (value) {
+                setState(() {
+                  selelectedOwner = value;
+                });
+              },
+              isExpanded: true,
+            ),
+          ],
+        ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -176,7 +455,11 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Test Hand',
+            label: 'Get Owner',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Test Owner',
           ),
         ],
         currentIndex: pageIndex,
@@ -190,44 +473,8 @@ class MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         onPressed: () {
           if (pageIndex == 0) {
             _addHand();
-          } else if (pageIndex == 1) {
-            _takePicture().then((image) => {
-              if (image != null) {
-                _getImageData(image).then((imageData) => {
-                  _getImageOwner(imageData).then((imageOwner) => {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            imageOwner.isInDatabase ? imageOwner.owner : 'Unknown',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 30,
-                              color: imageOwner.isInDatabase ? null : Colors.red,
-                            ),
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.memory(Uint8List.fromList(img.encodePng(image))),
-                              if (imageOwner.isInDatabase)
-                                const SizedBox(height: 20,),
-                              if (imageOwner.isInDatabase)
-                                Text(
-                                  'Probability: ${(100 * imageOwner.probability).toStringAsFixed(1)} %',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  })
-                })
-              }
-            });
+          } else {
+            _takePicture().then(processImage);
           }
         },
         tooltip: pageIndex == 0 ? 'Add Hand' : 'Take Picture',
@@ -320,7 +567,7 @@ class AddHandPageState extends State<AddHandPage> with WidgetsBindingObserver {
 
 
 class RegisteredHandsPage extends StatelessWidget {
-  final HashMap<String, (img.Image, ImageData)> registeredHands;
+  final HashMap<String, img.Image> registeredHands;
   final List<String> handOwners;
   final void Function(String) removeHand;
 
@@ -332,31 +579,36 @@ class RegisteredHandsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Registered Hands'),
       ),
-      body: ListView.builder(
-        itemCount: registeredHands.length,
-        itemBuilder: (context, index) {
-          String owner = handOwners[index];
-          return ListTile(
-            title: Text(owner),
-            onTap: () {
-              img.Image image = registeredHands[owner]!.$1;
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(owner),
-                    content: Image.memory(Uint8List.fromList(img.encodePng(image))),
+      body: Stack(
+        children: [
+          background,
+          ListView.builder(
+            itemCount: registeredHands.length,
+            itemBuilder: (context, index) {
+              String owner = handOwners[index];
+              return ListTile(
+                title: Text(owner),
+                onTap: () {
+                  img.Image image = registeredHands[owner]!;
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(owner),
+                        content: Image.memory(Uint8List.fromList(img.encodePng(image))),
+                      );
+                    },
                   );
                 },
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => removeHand(owner),
+                ),
               );
             },
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => removeHand(owner),
-            ),
-          );
-        },
-      ),
+          ),
+        ],
+      )
     );
   }
 }

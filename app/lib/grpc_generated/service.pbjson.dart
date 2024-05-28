@@ -13,19 +13,19 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use imageAndDatasetDescriptor instead')
-const ImageAndDataset$json = {
-  '1': 'ImageAndDataset',
+@$core.Deprecated('Use imageAndOwnerDescriptor instead')
+const ImageAndOwner$json = {
+  '1': 'ImageAndOwner',
   '2': [
-    {'1': 'image', '3': 1, '4': 1, '5': 11, '6': '.ImageData', '10': 'image'},
-    {'1': 'dataset', '3': 2, '4': 1, '5': 11, '6': '.Dataset', '10': 'dataset'},
+    {'1': 'image', '3': 1, '4': 1, '5': 11, '6': '.BytesImage', '10': 'image'},
+    {'1': 'owner', '3': 2, '4': 1, '5': 9, '10': 'owner'},
   ],
 };
 
-/// Descriptor for `ImageAndDataset`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageAndDatasetDescriptor = $convert.base64Decode(
-    'Cg9JbWFnZUFuZERhdGFzZXQSIAoFaW1hZ2UYASABKAsyCi5JbWFnZURhdGFSBWltYWdlEiIKB2'
-    'RhdGFzZXQYAiABKAsyCC5EYXRhc2V0UgdkYXRhc2V0');
+/// Descriptor for `ImageAndOwner`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageAndOwnerDescriptor = $convert.base64Decode(
+    'Cg1JbWFnZUFuZE93bmVyEiEKBWltYWdlGAEgASgLMgsuQnl0ZXNJbWFnZVIFaW1hZ2USFAoFb3'
+    'duZXIYAiABKAlSBW93bmVy');
 
 @$core.Deprecated('Use bytesImageDescriptor instead')
 const BytesImage$json = {
@@ -42,44 +42,52 @@ final $typed_data.Uint8List bytesImageDescriptor = $convert.base64Decode(
     'CgpCeXRlc0ltYWdlEhQKBWJ5dGVzGAEgAygNUgVieXRlcxIWCgZoZWlnaHQYAiABKAVSBmhlaW'
     'dodBIUCgV3aWR0aBgDIAEoBVIFd2lkdGg=');
 
-@$core.Deprecated('Use imageDataDescriptor instead')
-const ImageData$json = {
-  '1': 'ImageData',
+@$core.Deprecated('Use confidenceDescriptor instead')
+const Confidence$json = {
+  '1': 'Confidence',
   '2': [
-    {'1': 'data', '3': 1, '4': 3, '5': 2, '10': 'data'},
+    {'1': 'result', '3': 1, '4': 1, '5': 8, '10': 'result'},
+    {'1': 'probability', '3': 2, '4': 1, '5': 2, '10': 'probability'},
   ],
 };
 
-/// Descriptor for `ImageData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageDataDescriptor = $convert.base64Decode(
-    'CglJbWFnZURhdGESEgoEZGF0YRgBIAMoAlIEZGF0YQ==');
-
-@$core.Deprecated('Use datasetDescriptor instead')
-const Dataset$json = {
-  '1': 'Dataset',
-  '2': [
-    {'1': 'images', '3': 1, '4': 3, '5': 11, '6': '.ImageData', '10': 'images'},
-    {'1': 'owners', '3': 2, '4': 3, '5': 9, '10': 'owners'},
-  ],
-};
-
-/// Descriptor for `Dataset`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List datasetDescriptor = $convert.base64Decode(
-    'CgdEYXRhc2V0EiIKBmltYWdlcxgBIAMoCzIKLkltYWdlRGF0YVIGaW1hZ2VzEhYKBm93bmVycx'
-    'gCIAMoCVIGb3duZXJz');
+/// Descriptor for `Confidence`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List confidenceDescriptor = $convert.base64Decode(
+    'CgpDb25maWRlbmNlEhYKBnJlc3VsdBgBIAEoCFIGcmVzdWx0EiAKC3Byb2JhYmlsaXR5GAIgAS'
+    'gCUgtwcm9iYWJpbGl0eQ==');
 
 @$core.Deprecated('Use imageOwnerDescriptor instead')
 const ImageOwner$json = {
   '1': 'ImageOwner',
   '2': [
-    {'1': 'is_in_database', '3': 1, '4': 1, '5': 8, '10': 'isInDatabase'},
-    {'1': 'owner', '3': 2, '4': 1, '5': 9, '10': 'owner'},
-    {'1': 'probability', '3': 3, '4': 1, '5': 2, '10': 'probability'},
+    {'1': 'owner', '3': 1, '4': 1, '5': 9, '10': 'owner'},
+    {'1': 'confidence', '3': 2, '4': 1, '5': 11, '6': '.Confidence', '10': 'confidence'},
   ],
 };
 
 /// Descriptor for `ImageOwner`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageOwnerDescriptor = $convert.base64Decode(
-    'CgpJbWFnZU93bmVyEiQKDmlzX2luX2RhdGFiYXNlGAEgASgIUgxpc0luRGF0YWJhc2USFAoFb3'
-    'duZXIYAiABKAlSBW93bmVyEiAKC3Byb2JhYmlsaXR5GAMgASgCUgtwcm9iYWJpbGl0eQ==');
+    'CgpJbWFnZU93bmVyEhQKBW93bmVyGAEgASgJUgVvd25lchIrCgpjb25maWRlbmNlGAIgASgLMg'
+    'suQ29uZmlkZW5jZVIKY29uZmlkZW5jZQ==');
+
+@$core.Deprecated('Use handOwnersDescriptor instead')
+const HandOwners$json = {
+  '1': 'HandOwners',
+  '2': [
+    {'1': 'names', '3': 1, '4': 3, '5': 9, '10': 'names'},
+  ],
+};
+
+/// Descriptor for `HandOwners`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List handOwnersDescriptor = $convert.base64Decode(
+    'CgpIYW5kT3duZXJzEhQKBW5hbWVzGAEgAygJUgVuYW1lcw==');
+
+@$core.Deprecated('Use emptyDescriptor instead')
+const Empty$json = {
+  '1': 'Empty',
+};
+
+/// Descriptor for `Empty`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List emptyDescriptor = $convert.base64Decode(
+    'CgVFbXB0eQ==');
 

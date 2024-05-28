@@ -14,23 +14,25 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rservice.proto\"G\n\x0fImageAndDataset\x12\x19\n\x05image\x18\x01 \x01(\x0b\x32\n.ImageData\x12\x19\n\x07\x64\x61taset\x18\x02 \x01(\x0b\x32\x08.Dataset\":\n\nBytesImage\x12\r\n\x05\x62ytes\x18\x01 \x03(\r\x12\x0e\n\x06height\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\"\x19\n\tImageData\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x02\"5\n\x07\x44\x61taset\x12\x1a\n\x06images\x18\x01 \x03(\x0b\x32\n.ImageData\x12\x0e\n\x06owners\x18\x02 \x03(\t\"H\n\nImageOwner\x12\x16\n\x0eis_in_database\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\x12\x13\n\x0bprobability\x18\x03 \x01(\x02\x32u\n\x16ImageProcessingService\x12)\n\x0cGetImageData\x12\x0b.BytesImage\x1a\n.ImageData\"\x00\x12\x30\n\rGetImageOwner\x12\x10.ImageAndDataset\x1a\x0b.ImageOwner\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rservice.proto\":\n\rImageAndOwner\x12\x1a\n\x05image\x18\x01 \x01(\x0b\x32\x0b.BytesImage\x12\r\n\x05owner\x18\x02 \x01(\t\":\n\nBytesImage\x12\r\n\x05\x62ytes\x18\x01 \x03(\r\x12\x0e\n\x06height\x18\x02 \x01(\x05\x12\r\n\x05width\x18\x03 \x01(\x05\"1\n\nConfidence\x12\x0e\n\x06result\x18\x01 \x01(\x08\x12\x13\n\x0bprobability\x18\x02 \x01(\x02\"<\n\nImageOwner\x12\r\n\x05owner\x18\x01 \x01(\t\x12\x1f\n\nconfidence\x18\x02 \x01(\x0b\x32\x0b.Confidence\"\x1b\n\nHandOwners\x12\r\n\x05names\x18\x01 \x03(\t\"\x07\n\x05\x45mpty2\xd3\x01\n\x16ImageProcessingService\x12.\n\x12\x41\x64\x64ImageToDatabase\x12\x0e.ImageAndOwner\x1a\x06.Empty\"\x00\x12+\n\rGetImageOwner\x12\x0b.BytesImage\x1a\x0b.ImageOwner\"\x00\x12\x34\n\x13IsImageOwnedByOwner\x12\x0e.ImageAndOwner\x1a\x0b.Confidence\"\x00\x12&\n\rGetHandOwners\x12\x06.Empty\x1a\x0b.HandOwners\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_IMAGEANDDATASET']._serialized_start=17
-  _globals['_IMAGEANDDATASET']._serialized_end=88
-  _globals['_BYTESIMAGE']._serialized_start=90
-  _globals['_BYTESIMAGE']._serialized_end=148
-  _globals['_IMAGEDATA']._serialized_start=150
-  _globals['_IMAGEDATA']._serialized_end=175
-  _globals['_DATASET']._serialized_start=177
-  _globals['_DATASET']._serialized_end=230
-  _globals['_IMAGEOWNER']._serialized_start=232
-  _globals['_IMAGEOWNER']._serialized_end=304
-  _globals['_IMAGEPROCESSINGSERVICE']._serialized_start=306
-  _globals['_IMAGEPROCESSINGSERVICE']._serialized_end=423
+  _globals['_IMAGEANDOWNER']._serialized_start=17
+  _globals['_IMAGEANDOWNER']._serialized_end=75
+  _globals['_BYTESIMAGE']._serialized_start=77
+  _globals['_BYTESIMAGE']._serialized_end=135
+  _globals['_CONFIDENCE']._serialized_start=137
+  _globals['_CONFIDENCE']._serialized_end=186
+  _globals['_IMAGEOWNER']._serialized_start=188
+  _globals['_IMAGEOWNER']._serialized_end=248
+  _globals['_HANDOWNERS']._serialized_start=250
+  _globals['_HANDOWNERS']._serialized_end=277
+  _globals['_EMPTY']._serialized_start=279
+  _globals['_EMPTY']._serialized_end=286
+  _globals['_IMAGEPROCESSINGSERVICE']._serialized_start=289
+  _globals['_IMAGEPROCESSINGSERVICE']._serialized_end=500
 # @@protoc_insertion_point(module_scope)

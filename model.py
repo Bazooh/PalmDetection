@@ -39,18 +39,15 @@ def dual_model(input_shape, network):
     return model
 
 
-lambda_regularizer = 0.0
+lambda_regularizer = 0.03
 
 simple_model = tf.keras.Sequential([
     Resizing(100, 100, interpolation='bilinear'),
     
-    Conv2D(32, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Conv2D(32, (5, 5), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
     Conv2D(64, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
-    MaxPooling2D((2, 2)),
-    
-    Conv2D(128, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
     Conv2D(256, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
@@ -63,7 +60,6 @@ simple_model = tf.keras.Sequential([
     
     Dropout(0.2),
     Dense(128, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
-    Dropout(0.2),
     Dense(32, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
 ])
 
@@ -71,41 +67,45 @@ simple_model = tf.keras.Sequential([
 alexnet_model = tf.keras.Sequential([
     Resizing(100, 100, interpolation='bilinear'),
     
-    Conv2D(96, (11, 11), strides=(4, 4), activation='relu'),
+    Conv2D(96, (11, 11), strides=(4, 4), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((3, 3), strides=(2, 2)),
     
-    Conv2D(256, (5, 5), padding='same', activation='relu'),
+    Conv2D(256, (5, 5), padding='same', activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((3, 3), strides=(2, 2)),
     
-    Conv2D(384, (3, 3), padding='same', activation='relu'),
-    Conv2D(384, (3, 3), padding='same', activation='relu'),
-    Conv2D(256, (3, 3), padding='same', activation='relu'),
-    MaxPooling2D((3, 3), strides=(2, 2)),
+    Conv2D(384, (3, 3), padding='same', activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Conv2D(384, (3, 3), padding='same', activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Conv2D(256, (3, 3), padding='same', activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    MaxPooling2D((3, 3), strides=(1, 1)),
     
     Flatten(),
-    Dense(4096, activation='relu'),
-    Dense(4096, activation='relu'),
-    Dense(512, activation='relu'),
+    
+    Dropout(0.2),
+    Dense(128, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Dense(32, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
 ])
 
 
-small_cnn_model = tf.keras.Sequential([
+big_cnn_model = tf.keras.Sequential([
     Resizing(100, 100, interpolation='bilinear'),
     
-    Conv2D(16, (3, 3), activation='relu'),
+    Conv2D(32, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Conv2D(64, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(32, (3, 3), activation='relu'),
+    Conv2D(128, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Conv2D(128, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(64, (3, 3), activation='relu'),
+    Conv2D(256, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
-    Conv2D(128, (3, 3), activation='relu'),
+    Conv2D(512, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
     MaxPooling2D((2, 2)),
     
     Flatten(),
-    Dense(64, activation='relu'),
-    Dense(16, activation='relu'),
-    # Dense(4, activation='relu'),
+    
+    Dropout(0.2),
+    Dense(256, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
+    Dense(32, activation='relu', kernel_regularizer=regularizers.l2(lambda_regularizer)),
 ])

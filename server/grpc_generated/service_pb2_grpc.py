@@ -39,22 +39,32 @@ class ImageProcessingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetImageData = channel.unary_unary(
-                '/ImageProcessingService/GetImageData',
-                request_serializer=service__pb2.BytesImage.SerializeToString,
-                response_deserializer=service__pb2.ImageData.FromString,
+        self.AddImageToDatabase = channel.unary_unary(
+                '/ImageProcessingService/AddImageToDatabase',
+                request_serializer=service__pb2.ImageAndOwner.SerializeToString,
+                response_deserializer=service__pb2.Empty.FromString,
                 _registered_method=True)
         self.GetImageOwner = channel.unary_unary(
                 '/ImageProcessingService/GetImageOwner',
-                request_serializer=service__pb2.ImageAndDataset.SerializeToString,
+                request_serializer=service__pb2.BytesImage.SerializeToString,
                 response_deserializer=service__pb2.ImageOwner.FromString,
+                _registered_method=True)
+        self.IsImageOwnedByOwner = channel.unary_unary(
+                '/ImageProcessingService/IsImageOwnedByOwner',
+                request_serializer=service__pb2.ImageAndOwner.SerializeToString,
+                response_deserializer=service__pb2.Confidence.FromString,
+                _registered_method=True)
+        self.GetHandOwners = channel.unary_unary(
+                '/ImageProcessingService/GetHandOwners',
+                request_serializer=service__pb2.Empty.SerializeToString,
+                response_deserializer=service__pb2.HandOwners.FromString,
                 _registered_method=True)
 
 
 class ImageProcessingServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetImageData(self, request, context):
+    def AddImageToDatabase(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -66,18 +76,40 @@ class ImageProcessingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def IsImageOwnedByOwner(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetHandOwners(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ImageProcessingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetImageData': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetImageData,
-                    request_deserializer=service__pb2.BytesImage.FromString,
-                    response_serializer=service__pb2.ImageData.SerializeToString,
+            'AddImageToDatabase': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddImageToDatabase,
+                    request_deserializer=service__pb2.ImageAndOwner.FromString,
+                    response_serializer=service__pb2.Empty.SerializeToString,
             ),
             'GetImageOwner': grpc.unary_unary_rpc_method_handler(
                     servicer.GetImageOwner,
-                    request_deserializer=service__pb2.ImageAndDataset.FromString,
+                    request_deserializer=service__pb2.BytesImage.FromString,
                     response_serializer=service__pb2.ImageOwner.SerializeToString,
+            ),
+            'IsImageOwnedByOwner': grpc.unary_unary_rpc_method_handler(
+                    servicer.IsImageOwnedByOwner,
+                    request_deserializer=service__pb2.ImageAndOwner.FromString,
+                    response_serializer=service__pb2.Confidence.SerializeToString,
+            ),
+            'GetHandOwners': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetHandOwners,
+                    request_deserializer=service__pb2.Empty.FromString,
+                    response_serializer=service__pb2.HandOwners.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -90,7 +122,7 @@ class ImageProcessingService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetImageData(request,
+    def AddImageToDatabase(request,
             target,
             options=(),
             channel_credentials=None,
@@ -103,9 +135,9 @@ class ImageProcessingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ImageProcessingService/GetImageData',
-            service__pb2.BytesImage.SerializeToString,
-            service__pb2.ImageData.FromString,
+            '/ImageProcessingService/AddImageToDatabase',
+            service__pb2.ImageAndOwner.SerializeToString,
+            service__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -131,8 +163,62 @@ class ImageProcessingService(object):
             request,
             target,
             '/ImageProcessingService/GetImageOwner',
-            service__pb2.ImageAndDataset.SerializeToString,
+            service__pb2.BytesImage.SerializeToString,
             service__pb2.ImageOwner.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IsImageOwnedByOwner(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ImageProcessingService/IsImageOwnedByOwner',
+            service__pb2.ImageAndOwner.SerializeToString,
+            service__pb2.Confidence.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetHandOwners(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ImageProcessingService/GetHandOwners',
+            service__pb2.Empty.SerializeToString,
+            service__pb2.HandOwners.FromString,
             options,
             channel_credentials,
             insecure,

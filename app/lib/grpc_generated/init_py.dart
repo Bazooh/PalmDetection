@@ -12,23 +12,23 @@ bool localPyStartSkipped = false;
 /// or remote gRPC server to respond. If no response is resived within 15 second
 /// exception is thrown.
 /// Set [doNotStartPy] to `true` if you would like to use remote server
-Future<void> initPy([bool doNoStartPy = false]) async {
+Future<void> initPy({String? host, int? port, bool doNoStartPy = false}) async {
   _initParamsFromEnvVars(doNoStartPy);
 
   // Launch self-hosted servr or do nothing
   await (localPyStartSkipped ? Future(() => null) : initPyImpl());
 
-  await _waitForServer();
+  await _waitForServer(host: host, port: port);
 }
 
-Future<void> _waitForServer() async {
-  var cleint = HealthClient(getClientChannel());
+Future<void> _waitForServer({String? host, int? port}) async {
+  var client = HealthClient(getClientChannel(host: host, port: port));
   var request = HealthCheckRequest();
   var started = false;
 
   for (var i = 0; i < 30; i++) {
     try {
-      var r = await cleint.check(request);
+      var r = await client.check(request);
 
       if (r.status == HealthCheckResponse_ServingStatus.SERVING) {
         started = true;

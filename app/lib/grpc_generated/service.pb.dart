@@ -13,27 +13,27 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class ImageAndDataset extends $pb.GeneratedMessage {
-  factory ImageAndDataset({
-    ImageData? image,
-    Dataset? dataset,
+class ImageAndOwner extends $pb.GeneratedMessage {
+  factory ImageAndOwner({
+    BytesImage? image,
+    $core.String? owner,
   }) {
     final $result = create();
     if (image != null) {
       $result.image = image;
     }
-    if (dataset != null) {
-      $result.dataset = dataset;
+    if (owner != null) {
+      $result.owner = owner;
     }
     return $result;
   }
-  ImageAndDataset._() : super();
-  factory ImageAndDataset.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ImageAndDataset.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  ImageAndOwner._() : super();
+  factory ImageAndOwner.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAndOwner.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageAndDataset', createEmptyInstance: create)
-    ..aOM<ImageData>(1, _omitFieldNames ? '' : 'image', subBuilder: ImageData.create)
-    ..aOM<Dataset>(2, _omitFieldNames ? '' : 'dataset', subBuilder: Dataset.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageAndOwner', createEmptyInstance: create)
+    ..aOM<BytesImage>(1, _omitFieldNames ? '' : 'image', subBuilder: BytesImage.create)
+    ..aOS(2, _omitFieldNames ? '' : 'owner')
     ..hasRequiredFields = false
   ;
 
@@ -41,44 +41,42 @@ class ImageAndDataset extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  ImageAndDataset clone() => ImageAndDataset()..mergeFromMessage(this);
+  ImageAndOwner clone() => ImageAndOwner()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  ImageAndDataset copyWith(void Function(ImageAndDataset) updates) => super.copyWith((message) => updates(message as ImageAndDataset)) as ImageAndDataset;
+  ImageAndOwner copyWith(void Function(ImageAndOwner) updates) => super.copyWith((message) => updates(message as ImageAndOwner)) as ImageAndOwner;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ImageAndDataset create() => ImageAndDataset._();
-  ImageAndDataset createEmptyInstance() => create();
-  static $pb.PbList<ImageAndDataset> createRepeated() => $pb.PbList<ImageAndDataset>();
+  static ImageAndOwner create() => ImageAndOwner._();
+  ImageAndOwner createEmptyInstance() => create();
+  static $pb.PbList<ImageAndOwner> createRepeated() => $pb.PbList<ImageAndOwner>();
   @$core.pragma('dart2js:noInline')
-  static ImageAndDataset getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAndDataset>(create);
-  static ImageAndDataset? _defaultInstance;
+  static ImageAndOwner getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAndOwner>(create);
+  static ImageAndOwner? _defaultInstance;
 
   @$pb.TagNumber(1)
-  ImageData get image => $_getN(0);
+  BytesImage get image => $_getN(0);
   @$pb.TagNumber(1)
-  set image(ImageData v) { setField(1, v); }
+  set image(BytesImage v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasImage() => $_has(0);
   @$pb.TagNumber(1)
   void clearImage() => clearField(1);
   @$pb.TagNumber(1)
-  ImageData ensureImage() => $_ensure(0);
+  BytesImage ensureImage() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  Dataset get dataset => $_getN(1);
+  $core.String get owner => $_getSZ(1);
   @$pb.TagNumber(2)
-  set dataset(Dataset v) { setField(2, v); }
+  set owner($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasDataset() => $_has(1);
+  $core.bool hasOwner() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDataset() => clearField(2);
-  @$pb.TagNumber(2)
-  Dataset ensureDataset() => $_ensure(1);
+  void clearOwner() => clearField(2);
 }
 
 class BytesImage extends $pb.GeneratedMessage {
@@ -153,22 +151,27 @@ class BytesImage extends $pb.GeneratedMessage {
   void clearWidth() => clearField(3);
 }
 
-class ImageData extends $pb.GeneratedMessage {
-  factory ImageData({
-    $core.Iterable<$core.double>? data,
+class Confidence extends $pb.GeneratedMessage {
+  factory Confidence({
+    $core.bool? result,
+    $core.double? probability,
   }) {
     final $result = create();
-    if (data != null) {
-      $result.data.addAll(data);
+    if (result != null) {
+      $result.result = result;
+    }
+    if (probability != null) {
+      $result.probability = probability;
     }
     return $result;
   }
-  ImageData._() : super();
-  factory ImageData.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ImageData.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Confidence._() : super();
+  factory Confidence.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Confidence.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageData', createEmptyInstance: create)
-    ..p<$core.double>(1, _omitFieldNames ? '' : 'data', $pb.PbFieldType.KF)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Confidence', createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'result')
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'probability', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -176,94 +179,53 @@ class ImageData extends $pb.GeneratedMessage {
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  ImageData clone() => ImageData()..mergeFromMessage(this);
+  Confidence clone() => Confidence()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  ImageData copyWith(void Function(ImageData) updates) => super.copyWith((message) => updates(message as ImageData)) as ImageData;
+  Confidence copyWith(void Function(Confidence) updates) => super.copyWith((message) => updates(message as Confidence)) as Confidence;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ImageData create() => ImageData._();
-  ImageData createEmptyInstance() => create();
-  static $pb.PbList<ImageData> createRepeated() => $pb.PbList<ImageData>();
+  static Confidence create() => Confidence._();
+  Confidence createEmptyInstance() => create();
+  static $pb.PbList<Confidence> createRepeated() => $pb.PbList<Confidence>();
   @$core.pragma('dart2js:noInline')
-  static ImageData getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageData>(create);
-  static ImageData? _defaultInstance;
+  static Confidence getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Confidence>(create);
+  static Confidence? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<$core.double> get data => $_getList(0);
-}
-
-class Dataset extends $pb.GeneratedMessage {
-  factory Dataset({
-    $core.Iterable<ImageData>? images,
-    $core.Iterable<$core.String>? owners,
-  }) {
-    final $result = create();
-    if (images != null) {
-      $result.images.addAll(images);
-    }
-    if (owners != null) {
-      $result.owners.addAll(owners);
-    }
-    return $result;
-  }
-  Dataset._() : super();
-  factory Dataset.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Dataset.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Dataset', createEmptyInstance: create)
-    ..pc<ImageData>(1, _omitFieldNames ? '' : 'images', $pb.PbFieldType.PM, subBuilder: ImageData.create)
-    ..pPS(2, _omitFieldNames ? '' : 'owners')
-    ..hasRequiredFields = false
-  ;
-
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  Dataset clone() => Dataset()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Dataset copyWith(void Function(Dataset) updates) => super.copyWith((message) => updates(message as Dataset)) as Dataset;
-
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Dataset create() => Dataset._();
-  Dataset createEmptyInstance() => create();
-  static $pb.PbList<Dataset> createRepeated() => $pb.PbList<Dataset>();
-  @$core.pragma('dart2js:noInline')
-  static Dataset getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Dataset>(create);
-  static Dataset? _defaultInstance;
-
+  $core.bool get result => $_getBF(0);
   @$pb.TagNumber(1)
-  $core.List<ImageData> get images => $_getList(0);
+  set result($core.bool v) { $_setBool(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasResult() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearResult() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<$core.String> get owners => $_getList(1);
+  $core.double get probability => $_getN(1);
+  @$pb.TagNumber(2)
+  set probability($core.double v) { $_setFloat(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasProbability() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearProbability() => clearField(2);
 }
 
 class ImageOwner extends $pb.GeneratedMessage {
   factory ImageOwner({
-    $core.bool? isInDatabase,
     $core.String? owner,
-    $core.double? probability,
+    Confidence? confidence,
   }) {
     final $result = create();
-    if (isInDatabase != null) {
-      $result.isInDatabase = isInDatabase;
-    }
     if (owner != null) {
       $result.owner = owner;
     }
-    if (probability != null) {
-      $result.probability = probability;
+    if (confidence != null) {
+      $result.confidence = confidence;
     }
     return $result;
   }
@@ -272,9 +234,8 @@ class ImageOwner extends $pb.GeneratedMessage {
   factory ImageOwner.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageOwner', createEmptyInstance: create)
-    ..aOB(1, _omitFieldNames ? '' : 'isInDatabase')
-    ..aOS(2, _omitFieldNames ? '' : 'owner')
-    ..a<$core.double>(3, _omitFieldNames ? '' : 'probability', $pb.PbFieldType.OF)
+    ..aOS(1, _omitFieldNames ? '' : 'owner')
+    ..aOM<Confidence>(2, _omitFieldNames ? '' : 'confidence', subBuilder: Confidence.create)
     ..hasRequiredFields = false
   ;
 
@@ -300,31 +261,100 @@ class ImageOwner extends $pb.GeneratedMessage {
   static ImageOwner? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get isInDatabase => $_getBF(0);
+  $core.String get owner => $_getSZ(0);
   @$pb.TagNumber(1)
-  set isInDatabase($core.bool v) { $_setBool(0, v); }
+  set owner($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasIsInDatabase() => $_has(0);
+  $core.bool hasOwner() => $_has(0);
   @$pb.TagNumber(1)
-  void clearIsInDatabase() => clearField(1);
+  void clearOwner() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get owner => $_getSZ(1);
+  Confidence get confidence => $_getN(1);
   @$pb.TagNumber(2)
-  set owner($core.String v) { $_setString(1, v); }
+  set confidence(Confidence v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasOwner() => $_has(1);
+  $core.bool hasConfidence() => $_has(1);
   @$pb.TagNumber(2)
-  void clearOwner() => clearField(2);
+  void clearConfidence() => clearField(2);
+  @$pb.TagNumber(2)
+  Confidence ensureConfidence() => $_ensure(1);
+}
 
-  @$pb.TagNumber(3)
-  $core.double get probability => $_getN(2);
-  @$pb.TagNumber(3)
-  set probability($core.double v) { $_setFloat(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasProbability() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearProbability() => clearField(3);
+class HandOwners extends $pb.GeneratedMessage {
+  factory HandOwners({
+    $core.Iterable<$core.String>? names,
+  }) {
+    final $result = create();
+    if (names != null) {
+      $result.names.addAll(names);
+    }
+    return $result;
+  }
+  HandOwners._() : super();
+  factory HandOwners.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory HandOwners.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'HandOwners', createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'names')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  HandOwners clone() => HandOwners()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  HandOwners copyWith(void Function(HandOwners) updates) => super.copyWith((message) => updates(message as HandOwners)) as HandOwners;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HandOwners create() => HandOwners._();
+  HandOwners createEmptyInstance() => create();
+  static $pb.PbList<HandOwners> createRepeated() => $pb.PbList<HandOwners>();
+  @$core.pragma('dart2js:noInline')
+  static HandOwners getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<HandOwners>(create);
+  static HandOwners? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$core.String> get names => $_getList(0);
+}
+
+class Empty extends $pb.GeneratedMessage {
+  factory Empty() => create();
+  Empty._() : super();
+  factory Empty.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Empty.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Empty', createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Empty clone() => Empty()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Empty copyWith(void Function(Empty) updates) => super.copyWith((message) => updates(message as Empty)) as Empty;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Empty create() => Empty._();
+  Empty createEmptyInstance() => create();
+  static $pb.PbList<Empty> createRepeated() => $pb.PbList<Empty>();
+  @$core.pragma('dart2js:noInline')
+  static Empty getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Empty>(create);
+  static Empty? _defaultInstance;
 }
 
 

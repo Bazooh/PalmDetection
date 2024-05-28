@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-message ImageAndDataset {
-  ImageData image = 1;
-  Dataset dataset = 2;
+message ImageAndOwner {
+  BytesImage image = 1;
+  string owner = 2;
 }
 
 message BytesImage {
@@ -11,22 +11,26 @@ message BytesImage {
   int32 width = 3;
 }
 
-message ImageData {
-  repeated float data = 1;
-}
-
-message Dataset {
-  repeated ImageData images = 1;
-  repeated string owners = 2;
+message Confidence {
+  bool result = 1;
+  float probability = 2;
 }
 
 message ImageOwner {
-  bool is_in_database = 1;
-  string owner = 2;
-  float probability = 3;
+  string owner = 1;
+  Confidence confidence = 2;
 }
 
+message HandOwners {
+  repeated string names = 1;
+}
+
+message Empty {}
+
 service ImageProcessingService {
-  rpc GetImageData (BytesImage) returns (ImageData) {}
-  rpc GetImageOwner (ImageAndDataset) returns (ImageOwner) {}
+  rpc AddImageToDatabase (ImageAndOwner) returns (Empty) {}
+  rpc GetImageOwner (BytesImage) returns (ImageOwner) {}
+  rpc IsImageOwnedByOwner (ImageAndOwner) returns (Confidence) {}
+  rpc GetHandOwners (Empty) returns (HandOwners) {}
+  rpc ResetHandOwners (Empty) returns (Empty) {}
 }
